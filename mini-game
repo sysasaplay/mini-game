@@ -38,8 +38,7 @@ public class miniGame {
                     scelta = 0;
                 }
             } else {
-                // entriamo nella scena impostando scelta a 1,
-                // ma dopo la scena verrà chiesto all'utente cosa fare (vedi sotto)
+
                 scelta = 1;
             }
 
