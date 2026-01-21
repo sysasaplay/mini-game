@@ -1,123 +1,153 @@
 import java.util.Scanner;
 
 public class miniGame {
-public static void main(String[] args) {
-Scanner input = new Scanner(System.in);
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
 
-    String nome;
-    String Mago;
-    String Spadaccino;
-    String Healer;
-    String Info;
-    int classe;
-    int forza = 1;
-    int vite = 10;
-    int livello = 0;
-    double exp = 20.20;
-    int next_level = 100;
-    int scelta;
-    boolean giocoIniziato = false;
+        String nome;
+        int classe;
+        int forza = 1;
+        int vite = 10;
+        int livello = 0;
+        double exp = 20.20;
+        int next_level = 100;
+        int scelta;
+        boolean giocoIniziato = false;
 
-    String scelta1 = "Inizia il gioco";
-    String scelta2 = "Trama";
-    String scelta3 = "Esci";
+        String scelta1 = "Inizia il gioco";
+        String scelta2 = "Trama";
+        String scelta3 = "Esci";
 
-    System.out.print("nome personaggio: ");
-    nome = input.nextLine();
+        System.out.print("nome personaggio: ");
+        nome = input.nextLine();
 
-    System.out.println("***************************");
-    System.out.println("Benvenuto " + nome);
-    System.out.println("***************************");
+        System.out.println("***************************");
+        System.out.println("Benvenuto " + nome);
+        System.out.println("***************************");
 
-    do {
-        if (giocoIniziato == false) {
-            System.out.println("\n1) " + scelta1);
-            System.out.println("2) " + scelta2);
-            System.out.println("3) " + scelta3);
-            System.out.print("Inserisci la tua scelta: ");
-            scelta = input.nextInt();
-        } else {
-            scelta = 1; 
-        }
-
-        switch (scelta) {
-            
-        case 1:
-        if (giocoIniziato == false) {
-            System.out.println("\n--L'AVVENTURA DI " + nome.toUpperCase() + " HA INIZIO ---");
-            System.out.println("Scegli la classe del tuo personaggio: ");
-            System.out.println("1) Mago");
-            System.out.println("2) Spadaccino");
-            System.out.println("3) Healer");
-            System.out.println("4) Info");
-            System.out.print("Inserisci la tua scelta: ");
-            classe = input.nextInt();
-            
-            switch (classe) {
-                case 1:
-                System.out.println("Hai scelto il Mago");
-                forza = 18;
-                giocoIniziato = true;
-                break;
-
-                case 2:
-                System.out.println("Hai scelto lo Spadaccino");
-                forza = 12;
-                giocoIniziato = true;
-                break;
-
-                case 3:
-                System.out.println("Hai scelto l'Healer");
-                forza = 8;
-                giocoIniziato = true;
-                break;
-
-                case 4:
-                System.out.println("\nINFO: Mago (Attacco), Spadaccino (Difesa), Healer (Vita)");
-                break;
-            }
-        }
-
-        if (giocoIniziato == true) {
-            System.out.println("\n--- FASE 1: IL RISVEGLIO ---");
-            System.out.println(nome + ", apri gli occhi in una caverna umida.");
-            System.out.println("La tua forza attuale e': " + forza);
-            System.out.println("Senti un ruggito in lontananza. Cosa fai?");
-            System.out.println("1) Avanzi verso il rumore");
-            System.out.println("2) Cerchi un'altra uscita");
-            int azione = input.nextInt();
-            
-            if (azione == 1) {
-                System.out.println("Un mostro d'ombra ti attacca!");
-                if (forza > 10) {
-                    System.out.println("Grazie alla tua forza lo sconfiggi facilmente!");
-                    livello++;
-                } else {
-                    System.out.println("Fai fatica a sconfiggerlo, ma riesci a scappare.");
-                    vite -= 2;
+        do {
+            if (!giocoIniziato) {
+                System.out.println("\n1) " + scelta1);
+                System.out.println("2) " + scelta2);
+                System.out.println("3) " + scelta3);
+                System.out.print("Inserisci la tua scelta: ");
+                try {
+                    scelta = Integer.parseInt(input.nextLine());
+                } catch (NumberFormatException e) {
+                    System.out.println("Input non valido, riprova.");
+                    scelta = 0;
                 }
             } else {
-                System.out.println("Trovi un'uscita secondaria e trovi un'armatura leggera!");
+                // entriamo nella scena impostando scelta a 1,
+                // ma dopo la scena verrà chiesto all'utente cosa fare (vedi sotto)
+                scelta = 1;
             }
-            
-            System.out.println("\nL'avventura continua... (Premi 3 per uscire o 1 per rigiocare la scena)");
-    
-        }
-        break;
-        
-        case 2:
-        System.out.println("\n--TRAMA ---");
-        System.out.println("In un'epoca antica, un guerriero di nome " + nome);
-        System.out.println("doveva recuperare i " + next_level + " frammenti di luce.");
-        break;
-        
-        case 3:
-        System.out.println("\nUscita dal gioco... A presto!");
-        break;
-        }
 
-    } while (scelta != 3);
+            switch (scelta) {
 
-    input.close();
+                case 1:
+                    if (!giocoIniziato) {
+                        System.out.println("\n--L'AVVENTURA DI " + nome.toUpperCase() + " HA INIZIO ---");
+                        System.out.println("Scegli la classe del tuo personaggio: ");
+                        System.out.println("1) Mago");
+                        System.out.println("2) Spadaccino");
+                        System.out.println("3) Healer");
+                        System.out.println("4) Info");
+                        System.out.print("Inserisci la tua scelta: ");
+                        try {
+                            classe = Integer.parseInt(input.nextLine());
+                        } catch (NumberFormatException e) {
+                            System.out.println("Input non valido, seleziono classe predefinita (Healer).");
+                            classe = 3;
+                        }
+
+                        switch (classe) {
+                            case 1:
+                                System.out.println("Hai scelto il Mago");
+                                forza = 18;
+                                giocoIniziato = true;
+                                break;
+
+                            case 2:
+                                System.out.println("Hai scelto lo Spadaccino");
+                                forza = 12;
+                                giocoIniziato = true;
+                                break;
+
+                            case 3:
+                                System.out.println("Hai scelto l'Healer");
+                                forza = 8;
+                                giocoIniziato = true;
+                                break;
+
+                            case 4:
+                                System.out.println("\nINFO: Mago (Attacco), Spadaccino (Difesa), Healer (Vita)");
+                                break;
+
+                            default:
+                                System.out.println("Scelta non valida, riprova.");
+                                break;
+                        }
+                    }
+
+                    if (giocoIniziato) {
+                        System.out.println("\n--- FASE 1: IL RISVEGLIO ---");
+                        System.out.println(nome + ", apri gli occhi in una caverna umida.");
+                        System.out.println("La tua forza attuale e': " + forza);
+                        System.out.println("Senti un ruggito in lontananza. Cosa fai?");
+                        System.out.println("1) Avanzi verso il rumore");
+                        System.out.println("2) Cerchi un'altra uscita");
+                        System.out.print("Inserisci la tua scelta: ");
+
+                        int azione;
+                        try {
+                            azione = Integer.parseInt(input.nextLine());
+                        } catch (NumberFormatException e) {
+                            System.out.println("Input non valido, scelgo per te l'opzione 2.");
+                            azione = 2;
+                        }
+
+                        if (azione == 1) {
+                            System.out.println("Un mostro d'ombra ti attacca!");
+                            if (forza > 10) {
+                                System.out.println("Grazie alla tua forza lo sconfiggi facilmente!");
+                                livello++;
+                            } else {
+                                System.out.println("Fai fatica a sconfiggerlo, ma riesci a scappare.");
+                                vite -= 2;
+                            }
+                        } else {
+                            System.out.println("Trovi un'uscita secondaria e trovi un'armatura leggera!");
+                        }
+
+                        System.out.println("\nL'avventura continua... (Premi 3 per uscire o 1 per rigiocare la scena)");
+                        System.out.print("Inserisci la tua scelta: ");
+                        try {
+                            scelta = Integer.parseInt(input.nextLine());
+                        } catch (NumberFormatException e) {
+                            System.out.println("Input non valido, continuerò la scena (1).");
+                            scelta = 1;
+                        }
+                    }
+                    break;
+
+                case 2:
+                    System.out.println("\n--TRAMA ---");
+                    System.out.println("In un'epoca antica, un guerriero di nome " + nome);
+                    System.out.println("doveva recuperare i " + next_level + " frammenti di luce.");
+                    break;
+
+                case 3:
+                    System.out.println("\nUscita dal gioco... A presto!");
+                    break;
+
+                default:
+                    System.out.println("Scelta non valida, riprova.");
+                    break;
+            }
+
+        } while (scelta != 3);
+
+        input.close();
     }
 }
