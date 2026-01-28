@@ -81,17 +81,20 @@ public class miniGame {
                                 forza = 10;
                                 int vita_mago = 5;
                                 System.out.print("Hai " + vita_mago + " vite e " + forza + " di forza\n");
-                                if (numOggetti < INVENTARIO) { 
-                                    inventario[numOggetti] = "Bacchetta"; numOggetti++; }
+                                if (numOggetti < INVENTARIO) { inventario[numOggetti] = "Bastone"; numOggetti++; }
                                 break;
                             case 2:
                                 System.out.println("\nHai scelto l'Assassino");
+                                int vita_assassino = 10;
                                 forza = 15;
+                                System.out.println("Hai " + vita_assassino + " vita e " + forza);
                                 if (numOggetti < INVENTARIO) { inventario[numOggetti] = "Pugnale"; numOggetti++; }
                                 break;
                             case 3:
                                 System.out.println("\nHai scelto il Monaco");
+                                int vita_monaco = 7;
                                 forza = 8;
+                                System.out.println("Hai " + vita_monaco + " vita e " + forza);
                                 if (numOggetti < INVENTARIO) { inventario[numOggetti] = "Bastone"; numOggetti++; }
                                 break;
                             case 4:
@@ -128,12 +131,13 @@ public class miniGame {
                         }
 
                         if (azioneMago == 1) {
-                            System.out.println("Congratulazioni, sei salito di 2 livelli!");
+                            System.out.println("Congratulazioni, sei salito di 2 livelli!\n");
                             livello += 2;
-                            System.out.println("Uno studente ti sfida a duello.");
-                            System.out.println("1) Accetti");
-                            System.out.println("2) Rifiuti");
-                            System.out.print("Scelta: ");
+                            System.out.println("Il tuo livello: " + livello + "\n");
+                            System.out.println("Uno studente ti sfida a duello.\n");
+                            System.out.println("1) Accetti\n");
+                            System.out.println("2) Rifiuti\n");
+                            System.out.print("Scelta: \n");
                             int duello;
                             try {
                                 duello = Integer.parseInt(input.nextLine());
