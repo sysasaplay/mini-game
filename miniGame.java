@@ -77,8 +77,10 @@ public class miniGame {
 
                         switch (classe) {
                             case 1:
-                                System.out.println("\nHai scelto il Mago");
+                                System.out.println("\nHai scelto il Mago\n");
                                 forza = 10;
+                                int vita_mago = 5;
+                                System.out.print("Hai " + vita_mago + " vite e " + forza + " di forza\n");
                                 if (numOggetti < INVENTARIO) { 
                                     inventario[numOggetti] = "Bacchetta"; numOggetti++; }
                                 break;
@@ -112,10 +114,10 @@ public class miniGame {
                     
                     // STORIA SPECIFICA PER IL MAGO
                     if (classe == 1) { 
-                        System.out.println("\n--- STORIA MAGO: IL PRODIGIO ---");
-                        System.out.println("Ti svegli come figlio del Re. Inizi la tua vita a 7 anni.");
-                        System.out.println("1) Vai nell'accademia di famiglia");
-                        System.out.println("2) Studia nella biblioteca di casa");
+                        System.out.println("\n--- STORIA MAGO: IL PRODIGIO ---\n");
+                        System.out.println("Ti svegli come figlio del Re. Inizi la tua vita a 7 anni.\n");
+                        System.out.println("1) Vai nell'accademia di famiglia\n");
+                        System.out.println("2) Studia nella biblioteca di casa\n");
                         System.out.print("Scelta: ");
                         
                         int azioneMago; 
