@@ -1,199 +1,244 @@
 import java.util.Scanner;
 
 public class miniGame {
-    public static void main(String[] args) {
-        Scanner input = new Scanner(System.in);
 
+    static class Personaggio {
         String nome;
-        int classe = 0;
-        int forza = 1;
-        int vite = 10;
-        int livello = 0;
-        int next_level = 100;
-        int scelta;
-        boolean giocoIniziato = false;
+        String classeNome;
+        int forza;
+        int vite;
+        int livello;
+        
+        String[] inventario;
+        int numeroOggetti;
+        final int MAX_OGGETTI = 10;
 
-        int INVENTARIO = 10;
-        String[] inventario = new String[INVENTARIO];
-        int numOggetti = 0;
+        public Personaggio(String nome) {
+            this.nome = nome;
+            this.livello = 1;
+            this.inventario = new String[MAX_OGGETTI];
+            this.numeroOggetti = 0;
+        }
 
-        String scelta1 = "Inizia il gioco";
-        String scelta2 = "Trama";
-        String scelta3 = "Esci";
-
-        System.out.print("nome personaggio: ");
-        nome = input.nextLine();
-
-        System.out.println("***************************");
-        System.out.println("Benvenuto " + nome);
-        System.out.println("***************************");
-
-        do {
-            
-            if (!giocoIniziato) {
-                System.out.println("\n1) " + scelta1);
-                System.out.println("2) " + scelta2);
-                System.out.println("3) " + scelta3);
-                System.out.print("Inserisci la tua scelta: ");
-                try {
-                    scelta = Integer.parseInt(input.nextLine());
-                } catch (NumberFormatException e) {
-                    System.out.println("Input non valido, riprova.");
-                    scelta = 0;
-                }
+        public void aggiungiOggetto(String oggetto) {
+            if (numeroOggetti < MAX_OGGETTI) {
+                inventario[numeroOggetti] = oggetto;
+                numeroOggetti++;
+                System.out.println(">> Hai ottenuto: " + oggetto);
             } else {
-                System.out.println("\n1) Continua avventura");
-                System.out.println("2) " + scelta2);
-                System.out.println("3) Inventario");
-                System.out.println("4) " + scelta3);
-                System.out.print("Inserisci la tua scelta: ");
-                try {
-                    scelta = Integer.parseInt(input.nextLine());
-                } catch (NumberFormatException e) {
-                    System.out.println("Input non valido, riprova.");
-                    scelta = 0;
+                System.out.println(">> Inventario pieno!");
+            }
+        }
+
+        public void mostraInventario() {
+            System.out.println("\n--- ZAINO DI " + nome.toUpperCase() + " ---");
+            if (numeroOggetti == 0) {
+                System.out.println("(Vuoto)");
+            } else {
+                for (int i = 0; i < numeroOggetti; i++) {
+                    System.out.println((i + 1) + ") " + inventario[i]);
                 }
             }
+            System.out.println("-----------------------");
+        }
+
+        public void mostraStatistiche() {
+            System.out.println("\n*** STATISTICHE ***");
+            System.out.println("Classe: " + classeNome);
+            System.out.println("Livello: " + livello);
+            System.out.println("Vite: " + vite + " | Forza: " + forza);
+            System.out.println("*******************");
+        }
+    }
+
+    static Scanner input = new Scanner(System.in);
+    static Personaggio player;
+    static Personaggio Mikasa;
+    static boolean giocoIniziato = false;
+
+    public static void main(String[] args) {
+        System.out.print("Nome personaggio: ");
+        String nomeTemp = input.nextLine();
+        player = new Personaggio(nomeTemp);
+
+        System.out.println("***************************");
+        System.out.println("Benvenuto " + player.nome);
+        System.out.println("***************************");
+
+        boolean esegui = true;
+        while (esegui) {
+            mostra_menu();
+            int scelta = leggiIntero();
 
             switch (scelta) {
-
                 case 1:
-                    // --- INIZIO GIOCO O CONTINUAZIONE ---
-                    if (!giocoIniziato) {
-                        System.out.println("\n-- L'AVVENTURA DI " + nome.toUpperCase() + " HA INIZIO ---");
-                        System.out.println("Scegli la classe del tuo personaggio: ");
-                        System.out.println("1) Mago");
-                        System.out.println("2) Assassino");
-                        System.out.println("3) Monaco");
-                        System.out.println("4) Healer");
-                        System.out.println("5) Info");
-                        System.out.print("Inserisci la tua scelta: ");
-                        try {
-                            classe = Integer.parseInt(input.nextLine());
-                        } catch (NumberFormatException e) {
-                            System.out.println("Input non valido, seleziono Monaco.");
-                            classe = 3;
-                        }
-
-                        switch (classe) {
-                            case 1:
-                                System.out.println("\nHai scelto il Mago\n");
-                                forza = 10;
-                                int vita_mago = 5;
-                                System.out.print("Hai " + vita_mago + " vite e " + forza + " di forza\n");
-                                if (numOggetti < INVENTARIO) { inventario[numOggetti] = "Bastone"; numOggetti++; }
-                                break;
-                            case 2:
-                                System.out.println("\nHai scelto l'Assassino");
-                                int vita_assassino = 10;
-                                forza = 15;
-                                System.out.println("Hai " + vita_assassino + " vita e " + forza);
-                                if (numOggetti < INVENTARIO) { inventario[numOggetti] = "Pugnale"; numOggetti++; }
-                                break;
-                            case 3:
-                                System.out.println("\nHai scelto il Monaco");
-                                int vita_monaco = 7;
-                                forza = 8;
-                                System.out.println("Hai " + vita_monaco + " vita e " + forza);
-                                if (numOggetti < INVENTARIO) { inventario[numOggetti] = "Bastone"; numOggetti++; }
-                                break;
-                            case 4:
-                                System.out.println("\nHai scelto l'Healer");
-                                forza = 5;
-                                if (numOggetti < INVENTARIO) { inventario[numOggetti] = "Pozione"; numOggetti++; }
-                                break;
-                            case 5:
-                                System.out.println("\nINFO: Mago (Attacco), Assassino (Furtività)...");
-                                continue; 
-                            default:
-                                System.out.println("Scelta non valida, seleziono Monaco.");
-                                classe = 3;
-                                forza = 8;
-                                if (numOggetti < INVENTARIO) { inventario[numOggetti] = "Bastone"; numOggetti++; }
-                                break;
-                        }
-                        giocoIniziato = true;
-                    }
-                    
-                    // STORIA SPECIFICA PER IL MAGO
-                    if (classe == 1) { 
-                        System.out.println("\n--- STORIA MAGO: IL PRODIGIO ---\n");
-                        System.out.println("Ti svegli come figlio del Re. Inizi la tua vita a 7 anni.\n");
-                        System.out.println("1) Vai nell'accademia di famiglia\n");
-                        System.out.println("2) Studia nella biblioteca di casa\n");
-                        System.out.print("Scelta: ");
-                        
-                        int azioneMago; 
-                        try {
-                            azioneMago = Integer.parseInt(input.nextLine());
-                        } catch (NumberFormatException e) {
-                            azioneMago = 2;
-                        }
-
-                        if (azioneMago == 1) {
-                            System.out.println("Congratulazioni, sei salito di 2 livelli!\n");
-                            livello += 2;
-                            System.out.println("Il tuo livello: " + livello + "\n");
-                            System.out.println("Uno studente ti sfida a duello.\n");
-                            System.out.println("1) Accetti\n");
-                            System.out.println("2) Rifiuti\n");
-                            System.out.print("Scelta: \n");
-                            int duello;
-                            try {
-                                duello = Integer.parseInt(input.nextLine());
-                            } catch (NumberFormatException e) {
-                                duello = 2;
-                            }
-                            if (duello == 1) {
-                                System.out.println("Accetti. Vinci il duello! Livello attuale: " + (livello + 1) + ".");
-                                livello++;
-                            } else {
-                                System.out.println("Rifiuti. Ti allontani senza combattere.");
-                            }
-                        } else {
-                            System.out.println("Studi in biblioteca. La tua conoscenza aumenta.");
-                        }
-                    }
-                    if (classe == 2) {
-                        System.out.println("\n--- STORIA ASSASSINO ---");
-                        System.out.println("L'ombra ti chiama. La storia continua...");
-                    }
+                    gestisciAvventura();
                     break;
-
                 case 2:
                     System.out.println("\n-- TRAMA --");
-                    System.out.println("Devi recuperare i frammenti...");
+                    System.out.println("Uccidi il Re dei demoni con l'aiuto degli aspiranti eroi che incontreai nella storia!");
                     break;
-
                 case 3:
                     if (giocoIniziato) {
-                        System.out.println("\n-- INVENTARIO --");
-                        if (numOggetti == 0) {
-                            System.out.println("(vuoto)");
-                        } else {
-                            for (int i = 0; i < numOggetti; i++) {
-                                System.out.println((i + 1) + ") " + inventario[i]);
-                            }
-                        }
+                        player.mostraInventario();
                     } else {
-                        System.out.println("Uscita...");
+                        System.out.println("Uscita dal gioco...");
+                        esegui = false;
                     }
                     break;
-
                 case 4:
                     if (giocoIniziato) {
-                        System.out.println("Uscita...");
+                        System.out.println("Uscita dal gioco...");
+                        esegui = false;
                     } else {
-                        System.out.println("Scelta non valida.");
+                        System.out.println("Opzione non valida.");
                     }
                     break;
-
                 default:
                     System.out.println("Scelta non valida.");
             }
-
-        } while ( (!giocoIniziato && scelta != 3) || (giocoIniziato && scelta != 4) );
-
+        }
         input.close();
     }
+
+    static void mostra_menu() {
+        System.out.println("\n--- MENU PRINCIPALE ---");
+        if (!giocoIniziato) {
+            System.out.println("1) Inizia il gioco");
+            System.out.println("2) Trama");
+            System.out.println("3) Esci");
+        } else {
+            System.out.println("1) Continua avventura");
+            System.out.println("2) Trama");
+            System.out.println("3) Inventario");
+            System.out.println("4) Esci");
+        }
+        System.out.print("Scelta: ");
+    }
+
+    static int leggiIntero() {
+        try {
+            return Integer.parseInt(input.nextLine());
+        } catch (NumberFormatException e) {
+            return -1;
+        }
+    }
+
+    static void gestisciAvventura() {
+        if (!giocoIniziato) {
+            scegliClasse();
+            giocoIniziato = true;
+        }
+        
+        if (player.classeNome.equals("Mago")) {
+            storiaMago();
+        } else {
+            System.out.println("\nLa storia per " + player.classeNome + " e' ancora in sviluppo...");
+        }
+    }
+
+    static void scegliClasse() {
+        System.out.println("\nScegli la classe:");
+        System.out.println("1) Mago");
+        System.out.println("2) Assassino");
+        System.out.println("3) Monaco");
+        System.out.println("4) Healer");
+        System.out.print("-> ");
+        
+        int scelta = leggiIntero();
+
+        switch (scelta) {
+            case 1:
+                player.classeNome = "Mago";
+                player.forza = 10;
+                player.vite = 5;
+                player.aggiungiOggetto("Bastone Magico");
+                break;
+            case 2:
+                player.classeNome = "Assassino";
+                player.forza = 15;
+                player.vite = 10;
+                player.aggiungiOggetto("Pugnale");
+                break;
+            case 3:
+                player.classeNome = "Monaco";
+                player.forza = 8;
+                player.vite = 7;
+                player.aggiungiOggetto("Bastone");
+                break;
+            case 4:
+                player.classeNome = "Healer";
+                player.forza = 5;
+                player.vite = 8;
+                player.aggiungiOggetto("Pozione");
+                break;
+            default:
+                System.out.println("Classe non valida, diventi un Monaco.");
+                player.classeNome = "Monaco";
+                player.forza = 8;
+                player.vite = 7;
+                player.aggiungiOggetto("Bastone");
+        }
+        player.mostraStatistiche();
+    }
+
+    static void storiaMago() {
+        System.out.println("\n--- CAPITOLO 1: L'ACCADEMIA ---");
+        System.out.println("Ti svegli come figlio del Re.");
+        System.out.println("1) Vai all'accademia");
+        System.out.println("2) Studia a casa");
+        System.out.print("-> ");
+
+        int azione = leggiIntero();
+
+        if (azione == 1) {
+            System.out.println("\nVai all'accademia e sali di livello!");
+            player.livello += 2;
+            
+            System.out.println("Uno studente ti sfida a duello.");
+            System.out.println("1) Accetti");
+            System.out.println("2) Rifiuti");
+            System.out.print("-> ");
+            
+            int duello = leggiIntero();
+            
+            if (duello == 1) {
+                System.out.println("Vinci il duello! Guadagni esperienza.");
+                player.livello++;
+                incontraYui();
+            } else {
+                System.out.println("Rifiuti e vieni deriso.");
+            }
+        } else {
+            System.out.println("Studi a casa. Impari molto ma non ti fai amici.");
+        }
+    }
+
+    static void incontraYui() {
+        System.out.println("\nUna ragazza di nome Yui si avvicina.");
+        System.out.println("<<Hey " + player.nome + ", vuoi mangiare con noi?>>");
+        System.out.println("1) Accetta");
+        System.out.println("2) Rifiuta");
+        System.out.print("-> ");
+        
+        int risp = leggiIntero();
+        if(risp == 1) {
+            System.out.println("Accetti. Yui ti sorride un pò imbarazzata e ti accompagna dalle sue amiche.\n");
+            incontro();
+        } else {
+            System.out.println("Te ne vai da solo.");
+        }
+    }
+        static void Mikasa() {
+            Mikasa.forza = 8;
+            Mikasa.vite = 7;
+            Mikasa.aggiungiOggetto("Arco");
+
+        }
+        static void incontro() {
+            System.out.println("Mikasa: Hey" + player.nome + ", mi chiamo Mikasa! Fujino: Invece io mi chiamo Fujino, piacere di consocerti!\n");
+            System.out.println("Mikasa: Volevamo chiederti se ti possiamo accompagnare nel viaggio contro il re dei demoni, siamo delle comagne forti!");
+            Mikasa.Mikasa();
+
+        }
 }
