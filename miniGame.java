@@ -13,6 +13,33 @@ public class miniGame {
         int numeroOggetti;
         final int MAX_OGGETTI = 10;
 
+        public class Main {
+
+            public static void main(String[] args) {
+            
+            /*String[] inventario = {"pozione", "spada", "arco", "scudo"};
+            
+            for (int i=0; i < inventario.length -1; i++) {
+            
+                for (int j = 0; j < inventario.length -1 - i; j++) {
+                    if (inventario[j].compareToIgnoreCase(inventario[j + 1]) > 0) {
+                    
+                    String temp = inventario[j];
+                    inventario[j] = inventario[j + 1];
+                    inventario[j + 1] = temp;
+                    
+                        }
+            
+                    }
+                }
+            
+                System.out.println("Elenco ordinato alfabeticamente: ");
+                for (int i = 0; i < inventario.length; i++) {
+                    System.out.println((i + 1) + ") " + inventario[i]);
+                    }
+                }
+            }
+  */
         public Personaggio(String nome) {
             this.nome = nome;
             this.livello = 1;
@@ -84,21 +111,16 @@ public class miniGame {
                 case 3:
                     if (giocoIniziato) {
                         player.mostraInventario();
-                        if (Mikasa != null) { 
-                            Mikasa.mostraInventario();
-                        }
+                        if (Mikasa != null) Mikasa.mostraInventario();
+                        if (Fujino != null) Fujino.mostraInventario();
                     } else {
                         System.out.println("Uscita dal gioco...");
                         esegui = false;
                     }
                     break;
                 case 4:
-                    if (giocoIniziato) {
-                        System.out.println("Uscita dal gioco...");
-                        esegui = false;
-                    } else {
-                        System.out.println("Opzione non valida.");
-                    }
+                    System.out.println("Uscita dal gioco...");
+                    esegui = false;
                     break;
                 default:
                     System.out.println("Scelta non valida.");
@@ -152,38 +174,8 @@ public class miniGame {
         System.out.print("-> ");
         
         int scelta = leggiIntero();
-
-        switch (scelta) {
-            case 1:
-                player.classeNome = "Mago";
-                player.forza = 10;
-                player.vite = 5;
-                player.aggiungiOggetto("Bastone Magico");
-                break;
-            case 2:
-                player.classeNome = "Assassino";
-                player.forza = 15;
-                player.vite = 10;
-                player.aggiungiOggetto("Pugnale");
-                break;
-            case 3:
-                player.classeNome = "Monaco";
-                player.forza = 8;
-                player.vite = 7;
-                player.aggiungiOggetto("Bastone");
-                break;
-            case 4:
-                player.classeNome = "Healer";
-                player.forza = 5;
-                player.vite = 8;
-                player.aggiungiOggetto("Pozione");
-                break;
-            default:
-                player.classeNome = "Monaco";
-                player.forza = 8;
-                player.vite = 7;
-                player.aggiungiOggetto("Bastone");
-        }
+        player.classeNome = "Mago"; 
+        player.forza = 10; player.vite = 5; player.aggiungiOggetto("Bastone Magico");
         player.mostraStatistiche();
     }
 
@@ -198,58 +190,37 @@ public class miniGame {
 
         if (azione == 1) {
             System.out.println("\nVai all'accademia e sali di livello!");
-            player.livello += 2;
-            player.forza += 3;
-            player.vite += 2;
+            player.livello += 2; player.forza += 3; player.vite += 2;
             player.mostraStatistiche();
             
-            System.out.println("Uno studente ti sfida a duello.");
-            System.out.println("1) Accetti");
-            System.out.println("2) Rifiuti");
-            System.out.print("-> ");
-            
-            int duello = leggiIntero();
-            
-            if (duello == 1) {
+            System.out.println("Uno studente ti sfida a duello. 1) Accetti 2) Rifiuti");
+            if (leggiIntero() == 1) {
                 System.out.println("Vinci il duello! Guadagni esperienza.");
                 player.livello++;
                 incontraYui();
             } else {
                 System.out.println("Rifiuti e vieni deriso.");
-                rifarsi();
-                studia();
+                rifarsi(); studia();
             }
         } else {
-            System.out.println("Studi a casa. Impari molto ma non ti fai amici.\n");
+            System.out.println("Studi a casa.");
         }
     }
 
     static void rifarsi() {
-        System.out.println("\nRifatti. Ti metti a studiare e ti diventa un mago molto forte.\n");
+        System.out.println("\nRifatti. Ti metti a studiare.");
         player.livello += 5;
-        player.forza += 10;
-        player.vite += 10;
     }
 
     static void studia() {
-        System.out.println("Studia. Ti metti a studiare e ti diventa un mago molto forte.\n");
+        System.out.println("Studia molto.");
         player.livello += 7;
-        player.forza += 10;
-        player.vite += 10;
-        System.out.println("Congratulazioni! Sei salito di livello " + player.livello + "!\n");
-
     }
 
     static void incontraYui() {
-        System.out.println("\nUna ragazza di nome Yui si avvicina.");
-        System.out.println("<<Hey " + player.nome + ", vuoi mangiare con noi?>>");
-        System.out.println("1) Accetta");
-        System.out.println("2) Rifiuta");
-        System.out.print("-> ");
-        
-        int risp = leggiIntero();
-        if(risp == 1) {
-            System.out.println("Accetti. Yui ti sorride un pò imbarazzata e ti accompagna dalle sue amiche.\n");
+        System.out.println("\nYui ti invita a mangiare. 1) Accetta 2) Rifiuta");
+        if(leggiIntero() == 1) {
+            System.out.println("Accetti e vai con lei.\n");
             incontro();
         } else {
             System.out.println("Te ne vai da solo.");
@@ -259,102 +230,100 @@ public class miniGame {
     static void Mikasa() {
         Mikasa = new Personaggio("Mikasa"); 
         Mikasa.classeNome = "Cacciatrice";
-        Mikasa.forza = 8;
-        Mikasa.vite = 7;
-        Mikasa.aggiungiOggetto("Arco");
+        Mikasa.forza = 8; Mikasa.vite = 7; Mikasa.aggiungiOggetto("Arco");
     }
     static void Fujino() {
         Fujino = new Personaggio("Fujino"); 
         Fujino.classeNome = "Healer";
-        Fujino.forza = 8;
-        Fujino.vite = 7;
-        Fujino.aggiungiOggetto("incantesimi di cura, ghiaccio e fuoco");
-        Fujino.mostraStatistiche();
+        Fujino.forza = 8; Fujino.vite = 7; Fujino.aggiungiOggetto("Incantesimi");
     }
 
     static void incontro() {
-        System.out.println("Mikasa: Hey " + player.nome + ", mi chiamo Mikasa! Sono una ragazza semiumana.");
-        System.out.println("Fujino: Invece io mi chiamo Fujino, piacere di consocerti!\n");
-        System.out.println("Mikasa: Volevamo chiederti se ti possiamo accompagnare nel viaggio contro il re dei demoni, siamo delle compagne forti!\n");
+        System.out.println("Mikasa e Fujino vogliono unirsi a te.");
         Mikasa(); 
         Fujino();
         
-        Mikasa.livello += 5;
-        Fujino.livello += 4;
-        Mikasa.forza += 15;
-        Fujino.forza += 13;
-        Mikasa.vite += 10;
-        Fujino.vite += 10;
+        Mikasa.livello += 5; Fujino.livello += 4;
+        Mikasa.forza += 15; Fujino.forza += 13;
+        Mikasa.vite += 10; Fujino.vite += 10;
         Mikasa.mostraStatistiche();
-        Mikasa.aggiungiOggetto("armatura");
-        Fujino.aggiungiOggetto("Lancia incantesimi con le mani\n");
+        Mikasa.aggiungiOggetto("Armatura");
+        Fujino.aggiungiOggetto("Guanti magici");
 
-        scelta(); 
+        sceltaCompagni(); 
     } 
 
-    static void scelta() {
+    static void sceltaCompagni() {
         System.out.println("1) Accetta");
         System.out.println("2) Rifiuta");
         System.out.print("-> ");
         
         int risp = leggiIntero();
         if(risp == 1) {
-            System.out.println("Accetti. Ti accompagna al viaggio natio e ti fa conoscere il capovillaggio.\n");
+            System.out.println("Accetti. Viaggi verso il villaggio.\n");
             villaggio();
         } else {
-            System.out.println("Rifiuti. Ti lasci andare e vai da solo e ti rechi in un villaggio poco distante da lì.\n");
+            System.out.println("Rifiuti e vai da solo.\n");
         }
     }
 
     static void villaggio() {
-        System.out.println("Congratulazioni! Hai aggiunto Mantello al tuo inventario!\n");
+        System.out.println("Arrivi al villaggio e ottieni un Mantello!\n");
         player.aggiungiOggetto("Mantello");
         player.livello += 2;
-        player.forza += 3;
-        player.vite += 2;
         player.mostraStatistiche();
+        
+        viaggio();
     }
-    static void viaggio() {
-        System.out.println("Inizi il tio viaggio. Ti accompagna Mikasa e Fujino nel viaggio contro il re dei demoni.\n");
-        System.out.println("Incontri un gruppo di mostri. Ti chiedono se vuoi combatterli.\n");
-        System.out.println("1) accetti");
-        System.out.println("2) rifiuti");
-        System.out.println("->");
 
-        scelta();
+
+    static void viaggio() {
+        System.out.println("\n--- CAPITOLO 2: IL VIAGGIO ---");
+        System.out.println("Inizi il tuo viaggio con Mikasa e Fujino.");
+        System.out.println("Incontri un gruppo di mostri. Ti chiedono se vuoi combatterli.\n");
+        System.out.println("1) Accetti");
+        System.out.println("2) Rifiuti");
+        System.out.print("-> ");
+
+        int risp = leggiIntero(); 
 
         if(risp == 1) {
-            System.out.println("Accetti. Ti imbatti in dei mostri poco pericolosi e ve la cavate.\n");
+            System.out.println("Accetti. Ti imbatti in mostri deboli e vinci facile.\n");
             grotta();
         } else {
-            System.out.println("Vi nascondete in un cespuglio e venite colpiti da dei mostri tutti e 3 togliendovi ");
-            Mikasa.vite - 3;
-            Fujino.vite - 3;
-            player.vite -3;
+            System.out.println("Vi nascondete ma venite colpiti, perdendo vita!");
+            Mikasa.vite -= 3;
+            Fujino.vite -= 3;
+            player.vite -= 3;
+            
+            System.out.println("Vite attuali -> Player: " + player.vite + ", Mikasa: " + Mikasa.vite + ", Fujino: " + Fujino.vite);
             grotta();
         }
+    } 
 
     public static void grotta() {
-        System.out.println("Trovate una grotta dove riposare prima di riprendere, Accendi un falò per mangiare qualcosa con le ragazze\n");
-        System.out.println("Reiniziate il vostro viaggio e vi imbattete in un'altro villaggio, dove vivono i nani, parli con Takumi");
-        System.out.println("Takumi ti porta al suo negozio e ti regala una spada");
-        System.out.println("1) accetti");
-        System.out.println("2) rifiuti");
+        System.out.println("\n--- LA GROTTA ---");
+        System.out.println("Trovate una grotta dove riposare e mangiate.");
+        System.out.println("Poi arrivate al villaggio dei nani e parli con Takumi.");
+        System.out.println("Takumi ti offre una spada in regalo.");
+        System.out.println("1) Accetti");
+        System.out.println("2) Rifiuti");
+        System.out.print("-> ");
 
-
-        scelta();
+        int risp = leggiIntero();
 
         if(risp == 1) {
-            System.out.println("Accetti. Ti dà questa spada e scopri che è fatta di Mithril, utile per sconfiggere il re dei demoni.\n");
+            System.out.println("Accetti. E' una spada in Mithril!\n");
             player.aggiungiOggetto("Spada in Mithril");
             continua();
         } else {
-            System.out.println("Rifiuti in modo codiale l'offerta ma scopri dopo che avresti fatto grandi progressi con quella spada");
+            System.out.println("Rifiuti l'offerta cordialmente.");
             continua();
         }
     }
 
     public static void continua() {
-
+        System.out.println("\nIl viaggio continua... (Fine della demo per ora)");
+        giocoIniziato = false; 
     }
 }
