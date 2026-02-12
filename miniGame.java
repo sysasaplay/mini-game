@@ -17,29 +17,36 @@ public class miniGame {
 
             public static void main(String[] args) {
             
-            /*String[] inventario = {"pozione", "spada", "arco", "scudo"};
-            
-            for (int i=0; i < inventario.length -1; i++) {
-            
-                for (int j = 0; j < inventario.length -1 - i; j++) {
-                    if (inventario[j].compareToIgnoreCase(inventario[j + 1]) > 0) {
-                    
+            /* LOGICA VISTA IN LABORATORIO PER L'ORDINAMENTO:
+        
+        String[] inventario = {"pozione", "spada", "arco", "scudo", null};
+        
+        for (int i=0; i < inventario.length -1; i++) {
+            for (int j = 0; j < inventario.length -1 - i; j++) {
+                
+                // GESTIONE ELEMENTI VUOTI (null):
+                // Se l'elemento attuale è null, lo spostiamo in avanti (verso la fine)
+                if (inventario[j] == null && inventario[j + 1] != null) {
                     String temp = inventario[j];
                     inventario[j] = inventario[j + 1];
                     inventario[j + 1] = temp;
-                    
-                        }
-            
-                    }
-                }
-            
-                System.out.println("Elenco ordinato alfabeticamente: ");
-                for (int i = 0; i < inventario.length; i++) {
-                    System.out.println((i + 1) + ") " + inventario[i]);
+                } 
+                // Altrimenti, se entrambi non sono null, facciamo il confronto alfabetico
+                else if (inventario[j] != null && inventario[j + 1] != null) {
+                    if (inventario[j].compareToIgnoreCase(inventario[j + 1]) > 0) {
+                        String temp = inventario[j];
+                        inventario[j] = inventario[j + 1];
+                        inventario[j + 1] = temp;
                     }
                 }
             }
-  */
+        }
+        
+        System.out.println("Elenco ordinato alfabeticamente (vuoti in fondo): ");
+        for (int i = 0; i < inventario.length; i++) {
+            System.out.println((i + 1) + ") " + (inventario[i] == null ? "[Vuoto]" : inventario[i]));
+        }
+        */
         public Personaggio(String nome) {
             this.nome = nome;
             this.livello = 1;
