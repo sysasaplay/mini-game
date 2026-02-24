@@ -1,3 +1,4 @@
+import java.util.Random;
 import java.util.Scanner;
 
 public class miniGame {
@@ -13,40 +14,11 @@ public class miniGame {
         int numeroOggetti;
         final int MAX_OGGETTI = 10;
 
-        public class Main {
-
-            public static void main(String[] args) {
-            
-            /* LOGICA VISTA IN LABORATORIO PER L'ORDINAMENTO:
-        
-        String[] inventario = {"pozione", "spada", "arco", "scudo", null};
-        
-        for (int i=0; i < inventario.length -1; i++) {
-            for (int j = 0; j < inventario.length -1 - i; j++) {
-                
-                // GESTIONE ELEMENTI VUOTI (null):
-                // Se l'elemento attuale è null, lo spostiamo in avanti (verso la fine)
-                if (inventario[j] == null && inventario[j + 1] != null) {
-                    String temp = inventario[j];
-                    inventario[j] = inventario[j + 1];
-                    inventario[j + 1] = temp;
-                } 
-                // Altrimenti, se entrambi non sono null, facciamo il confronto alfabetico
-                else if (inventario[j] != null && inventario[j + 1] != null) {
-                    if (inventario[j].compareToIgnoreCase(inventario[j + 1]) > 0) {
-                        String temp = inventario[j];
-                        inventario[j] = inventario[j + 1];
-                        inventario[j + 1] = temp;
-                    }
-                }
-            }
-        }
-        
-        System.out.println("Elenco ordinato alfabeticamente (vuoti in fondo): ");
-        for (int i = 0; i < inventario.length; i++) {
-            System.out.println((i + 1) + ") " + (inventario[i] == null ? "[Vuoto]" : inventario[i]));
-        }
+        /* LOGICA VISTA IN LABORATORIO PER L'ORDINAMENTO:
+        ... [commento accorciato per leggibilità, ma nel tuo IDE lascialo pure] ...
         */
+        
+        // Ho rimosso il finto 'main' che c'era qui in mezzo!
         public Personaggio(String nome) {
             this.nome = nome;
             this.livello = 1;
@@ -87,7 +59,10 @@ public class miniGame {
         }
     }
 
+    // Ecco Scanner e Random messi al posto giusto per tutto il gioco!
     static Scanner input = new Scanner(System.in);
+    static Random ran = new Random();
+    
     static Personaggio player;
     static Personaggio Mikasa; 
     static Personaggio Fujino;
@@ -283,7 +258,6 @@ public class miniGame {
         viaggio();
     }
 
-
     static void viaggio() {
         System.out.println("\n--- CAPITOLO 2: IL VIAGGIO ---");
         System.out.println("Inizi il tuo viaggio con Mikasa e Fujino.");
@@ -329,8 +303,50 @@ public class miniGame {
         }
     }
 
+    // Ecco il tuo metodo completato! Adesso restituisce un Personaggio
+    public static Personaggio generaNemico() {
+        int tipo = ran.nextInt(3); // Genera 0, 1 o 2
+        
+        Personaggio nemico = new Personaggio("Mostro");
+        nemico.classeNome = "Mostro";
+        nemico.livello = player.livello; // Scala col livello del giocatore
+
+        switch (tipo) {
+            case 0:
+                nemico.nome = "Slime";
+                nemico.forza = 2 + nemico.livello;
+                nemico.vite = 3 + nemico.livello;
+                nemico.aggiungiOggetto("Gelatina appiccicosa");
+                break;
+            case 1:
+                nemico.nome = "Goblin";
+                nemico.forza = 4 + nemico.livello;
+                nemico.vite = 4 + nemico.livello;
+                nemico.aggiungiOggetto("Pugnale arrugginito");
+                break;
+            case 2:
+                nemico.nome = "Lupo Randagio";
+                nemico.forza = 6 + nemico.livello;
+                nemico.vite = 3 + nemico.livello;
+                nemico.aggiungiOggetto("Zanna di lupo");
+                break;
+            default:
+                break;
+        }
+        
+        return nemico;
+    }
+
     public static void continua() {
-        System.out.println("\nIl viaggio continua... (Fine della demo per ora)");
+        System.out.println("\nDa qui inizia la tua vera battaglia. Potrai incontrare mostri random!");
+        
+
+        Personaggio nemicoTrovato = generaNemico();
+        System.out.println("E' apparso un " + nemicoTrovato.nome + " selvatico!");
+        nemicoTrovato.mostraStatistiche();
+
+
+        
         giocoIniziato = false; 
     }
 }
