@@ -1,4 +1,3 @@
-import java.util.Random;
 import java.util.Scanner;
 
 public class miniGame {
@@ -14,11 +13,6 @@ public class miniGame {
         int numeroOggetti;
         final int MAX_OGGETTI = 10;
 
-        /* LOGICA VISTA IN LABORATORIO PER L'ORDINAMENTO:
-        ... [commento accorciato per leggibilità, ma nel tuo IDE lascialo pure] ...
-        */
-        
-        // Ho rimosso il finto 'main' che c'era qui in mezzo!
         public Personaggio(String nome) {
             this.nome = nome;
             this.livello = 1;
@@ -59,13 +53,11 @@ public class miniGame {
         }
     }
 
-    // Ecco Scanner e Random messi al posto giusto per tutto il gioco!
     static Scanner input = new Scanner(System.in);
-    static Random ran = new Random();
-    
     static Personaggio player;
     static Personaggio Mikasa; 
     static Personaggio Fujino;
+    static Personaggio Orco;
     static boolean giocoIniziato = false;
 
     public static void main(String[] args) {
@@ -127,11 +119,18 @@ public class miniGame {
     }
 
     static int leggiIntero() {
-        try {
-            return Integer.parseInt(input.nextLine());
-        } catch (NumberFormatException e) {
-            return -1;
+        if (input.hasNextInt()) {          
+            int numero = input.nextInt();  
+            input.nextLine();              
+            return numero;
+        } else {
+            input.nextLine();              
+            return -1;                     
         }
+    }
+
+    static String leggiStringa() {
+        return input.nextLine().toUpperCase();
     }
 
     static void gestisciAvventura() {
@@ -175,7 +174,7 @@ public class miniGame {
             player.livello += 2; player.forza += 3; player.vite += 2;
             player.mostraStatistiche();
             
-            System.out.println("Uno studente ti sfida a duello. 1) Accetti 2) Rifiuti");
+            System.out.println("Uno studente ti sfida a duello. \n1) Accetti\n2) Rifiuti");
             if (leggiIntero() == 1) {
                 System.out.println("Vinci il duello! Guadagni esperienza.");
                 player.livello++;
@@ -200,7 +199,7 @@ public class miniGame {
     }
 
     static void incontraYui() {
-        System.out.println("\nYui ti invita a mangiare. 1) Accetta 2) Rifiuta");
+        System.out.println("\nYui ti invita a mangiare. \n1) Accetta \n2) Rifiuta");
         if(leggiIntero() == 1) {
             System.out.println("Accetti e vai con lei.\n");
             incontro();
@@ -214,6 +213,7 @@ public class miniGame {
         Mikasa.classeNome = "Cacciatrice";
         Mikasa.forza = 8; Mikasa.vite = 7; Mikasa.aggiungiOggetto("Arco");
     }
+
     static void Fujino() {
         Fujino = new Personaggio("Fujino"); 
         Fujino.classeNome = "Healer";
@@ -296,56 +296,90 @@ public class miniGame {
         if(risp == 1) {
             System.out.println("Accetti. E' una spada in Mithril!\n");
             player.aggiungiOggetto("Spada in Mithril");
-            continua();
+            dungeon();
         } else {
             System.out.println("Rifiuti l'offerta cordialmente.");
-            continua();
+            dungeon();
         }
     }
-
-    // Ecco il tuo metodo completato! Adesso restituisce un Personaggio
-    public static Personaggio generaNemico() {
-        int tipo = ran.nextInt(3); // Genera 0, 1 o 2
-        
-        Personaggio nemico = new Personaggio("Mostro");
-        nemico.classeNome = "Mostro";
-        nemico.livello = player.livello; // Scala col livello del giocatore
-
-        switch (tipo) {
-            case 0:
-                nemico.nome = "Slime";
-                nemico.forza = 2 + nemico.livello;
-                nemico.vite = 3 + nemico.livello;
-                nemico.aggiungiOggetto("Gelatina appiccicosa");
-                break;
-            case 1:
-                nemico.nome = "Goblin";
-                nemico.forza = 4 + nemico.livello;
-                nemico.vite = 4 + nemico.livello;
-                nemico.aggiungiOggetto("Pugnale arrugginito");
-                break;
-            case 2:
-                nemico.nome = "Lupo Randagio";
-                nemico.forza = 6 + nemico.livello;
-                nemico.vite = 3 + nemico.livello;
-                nemico.aggiungiOggetto("Zanna di lupo");
-                break;
-            default:
-                break;
-        }
-        
-        return nemico;
+       
+    static void Orco() {
+        Orco = new Personaggio("Orco"); 
+        Orco.classeNome = "Mostro";
+        Orco.forza = 8; Orco.vite = 20; Orco.aggiungiOggetto("Mazza di legno");
     }
 
-    public static void continua() {
-        System.out.println("\nDa qui inizia la tua vera battaglia. Potrai incontrare mostri random!");
+    public static void dungeon() {
+        System.out.println("\nVai nella gilda degli avventurieri e ti danno una quest obbligatoria: esplorare il dungeon per uccidere il re dei demoni.");
+        System.out.println("Usa i tasti W, A, S, D per muoverti e premi Invio. 'P' sei tu.");
         
+        char[][] mappaDungeon = {
+            {'E', '-', '-', 'O'},
+            {'X', 'X', '-', 'X'},
+            {'R', '-', '-', 'X'}
+        };
+        
+        int rigaGiocatore = 0;
+        int colonnaGiocatore = 0;
+        boolean inEsplorazione = true;
 
-        Personaggio nemicoTrovato = generaNemico();
-        System.out.println("E' apparso un " + nemicoTrovato.nome + " selvatico!");
-        nemicoTrovato.mostraStatistiche();
+        while (inEsplorazione) {
+            System.out.println("\n--- MAPPA DEL DUNGEON ---");
+            for (int r = 0; r < mappaDungeon.length; r++) {
+                for (int c = 0; c < mappaDungeon[r].length; c++) {
+                    if (r == rigaGiocatore && c == colonnaGiocatore) {
+                        System.out.print("P ");
+                    } else {
+                        System.out.print(mappaDungeon[r][c] + " ");
+                    }
+                }
+                System.out.println();
+            }
+            System.out.println("-------------------------");
+            
+            if (mappaDungeon[rigaGiocatore][colonnaGiocatore] == 'O') {
+                System.out.println("\nATTENZIONE! Ti sei imbattuto nell'Orco!");
+                Orco(); 
+                Orco.mostraStatistiche();
+                mappaDungeon[rigaGiocatore][colonnaGiocatore] = '-';
+                inEsplorazione = false;
+                break;
+            } else if (mappaDungeon[rigaGiocatore][colonnaGiocatore] == 'R') {
+                System.out.println("\nATTENZIONE! Hai trovato la stanza del Re dei Demoni!");
+                inEsplorazione = false;
+                break;
+            }
 
+            System.out.print("Dove vuoi andare? (W=Su, S=Giu, A=Sinistra, D=Destra): ");
+            String mossa = leggiStringa();
 
+            int nuovaRiga = rigaGiocatore;
+            int nuovaColonna = colonnaGiocatore;
+
+            if (mossa.equals("W")) {
+                nuovaRiga--;
+            } else if (mossa.equals("S")) {
+                nuovaRiga++;
+            } else if (mossa.equals("A")) {
+                nuovaColonna--;
+            } else if (mossa.equals("D")) {
+                nuovaColonna++;
+            } else {
+                System.out.println("Comando non valido.");
+                continue;
+            }
+
+            if (nuovaRiga >= 0 && nuovaRiga < mappaDungeon.length && nuovaColonna >= 0 && nuovaColonna < mappaDungeon[0].length) {
+                if (mappaDungeon[nuovaRiga][nuovaColonna] == 'X') {
+                    System.out.println("Non puoi passare, c'e' un muro!");
+                } else {
+                    rigaGiocatore = nuovaRiga;
+                    colonnaGiocatore = nuovaColonna;
+                }
+            } else {
+                System.out.println("Non puoi uscire dai confini del dungeon!");
+            }
+        }
         
         giocoIniziato = false; 
     }
