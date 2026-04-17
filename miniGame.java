@@ -4,10 +4,12 @@ import java.util.Scanner;
 public class miniGame {
 
     // ========== SISTEMA MAPPA ==========
-    static final int RIGHE = 10, COLONNE = 10;
-    static int playerY = 1, playerX = 1; // Posizione player sulla mappa (0-based)
+    static int RIGHE = 10;
+    static int COLONNE = 10;
+    static int playerY = 1, playerX = 1; 
     static char[][] mappa = new char[RIGHE][COLONNE];
-    static final int NUM_NEMICI = 10, NUM_OGGETTI = 6;
+    static int NUM_NEMICI = 10;
+    static int NUM_OGGETTI = 6;
     static Random rand = new Random();
     // ===================================
 
@@ -21,7 +23,7 @@ public class miniGame {
         
         String[] inventario;
         int numeroOggetti;
-        final int MAX_OGGETTI = 10;
+        int MAX_OGGETTI = 10;
 
         public Personaggio(String nome) {
             this.nome = nome;
@@ -69,7 +71,7 @@ public class miniGame {
     static Personaggio mikasa;
     static Personaggio fujino;
     static boolean giocoIniziato = false;
-    static boolean inEsplorazioneMappa = false; // Flag per modalità mappa
+    static boolean inEsplorazioneMappa = false;
 
     public static void main(String[] args) {
         System.out.print("Nome personaggio: ");
@@ -126,10 +128,9 @@ public class miniGame {
             System.out.println("3) Esci");
         } else {
             System.out.println("1) Continua avventura (Storia)");
-            System.out.println("2) Esplora Mappa 🗺️");
-            System.out.println("3) Trama");
-            System.out.println("4) Inventario");
-            System.out.println("5) Esci");
+            System.out.println("2) Trama");
+            System.out.println("3) Inventario");
+            System.out.println("4) Esci");
         }
         System.out.print("Scelta: ");
     }
@@ -137,7 +138,8 @@ public class miniGame {
     static void mostraMenuMappa() {
         System.out.println("\n--- 🗺️ ESPLORAZIONE MAPPA ---");
         stampaMappa();
-        System.out.println("\nComandi: W=Su, S=Giù, A=Sinistra, D=Destra, M=Menu, I=Inventario");
+        System.out.println("\nComandi: W=Su, S=Giù, A=Sinistra, D=Destra");
+        System.out.println("         I=Inventario, E=Esci dalla mappa");
         System.out.print("-> ");
     }
 
@@ -151,22 +153,25 @@ public class miniGame {
 
     // ========== SISTEMA MAPPA ==========
     static void inizializzaMappa() {
-        // Riempie la mappa con celle vuote
         for (int i = 0; i < RIGHE; i++) {
             for (int j = 0; j < COLONNE; j++) {
-                mappa[i][j] = '.';
+                if (i == 0 || i == RIGHE - 1 || j == 0 || j == COLONNE - 1) {
+                    mappa[i][j] = '#';
+                } else {
+                    mappa[i][j] = '.';
+                }
             }
         }
-        // Posiziona il player
+        playerY = 1; 
+        playerX = 1;
         mappa[playerY][playerX] = 'P';
     }
 
     static void posizionaElementi(int quantita, char simbolo) {
         int i = 0;
         while (i < quantita) {
-            int x = rand.nextInt(COLONNE);
-            int y = rand.nextInt(RIGHE);
-            // Non sovrascrivere player o elementi esistenti
+            int x = 1 + rand.nextInt(COLONNE - 2);
+            int y = 1 + rand.nextInt(RIGHE - 2);
             if (mappa[y][x] == '.' && !(y == playerY && x == playerX)) {
                 mappa[y][x] = simbolo;
                 i++;
@@ -187,72 +192,71 @@ public class miniGame {
             System.out.println();
         }
         System.out.println("   " + "-".repeat(COLONNE * 3));
-        System.out.println("Legenda: [P]=Tu, [N]=Nemico, [O]=Oggetto, [.]=Vuoto");
+        System.out.println("Legenda: #=Muro, P=Tu, N=Nemico, O=Oggetto, .=Vuoto");
         System.out.println("Posizione attuale: (" + playerY + ", " + playerX + ")");
     }
 
     static void gestisciInputMappa() {
         String comando = input.nextLine().trim().toUpperCase();
-        
         int newY = playerY, newX = playerX;
         
-        // Movimenti WASD o numerico
         switch (comando) {
-            case "W": case "8": newY--; break; // Su
-            case "S": case "2": newY++; break; // Giù
-            case "A": case "4": newX--; break; // Sinistra
-            case "D": case "6": newX++; break; // Destra
-            case "M": // Torna al menu principale
+            case "W": case "8": newY--; break;
+            case "S": case "2": newY++; break;
+            case "A": case "4": newX--; break;
+            case "D": case "6": newX++; break;
+            case "I": 
+                player.mostraInventario(); 
+                return;
+            case "E": case "M": case "Q":
+                System.out.println(">> Torni al menu principale.");
                 inEsplorazioneMappa = false;
                 return;
-            case "I": // Mostra inventario
-                player.mostraInventario();
-                return;
             default:
-                System.out.println("Comando non valido!");
+                System.out.println("Comando non valido! Usa WASD, I o E.");
                 return;
         }
         
-        // Controllo bordi mappa
-        if (newY < 0 || newY >= RIGHE || newX < 0 || newX >= COLONNE) {
-            System.out.println(">> Non puoi andare fuori dalla mappa!");
+        char cellaDestinazione = mappa[newY][newX];
+
+        if (cellaDestinazione == '#') {
+            System.out.println(">> 🧱 C'è un muro! Non puoi passare.");
             return;
         }
         
-        // Aggiorna posizione player sulla mappa
-        mappa[playerY][playerX] = '.'; // Pulisci vecchia posizione
-        playerY = newY;
-        playerX = newX;
-        
-        // Gestione interazione con la cella
-        char cella = mappa[playerY][playerX];
-        if (cella == 'N') {
+        // Risolto il Bug di sovrascrittura mappa: controllo preventivo della cella futura
+        if (cellaDestinazione == 'N') {
             System.out.println("\n⚔️ Un nemico ti attacca!");
-            combattiNemicoMappa();
-        } else if (cella == 'O') {
+            boolean vittoria = combattiNemicoMappa();
+            if (!vittoria) {
+                return; // Se fuggi o muori, non ti muovi nella casella del nemico
+            }
+        } else if (cellaDestinazione == 'O') {
             System.out.println("\n✨ Hai trovato un oggetto!");
             raccogliOggettoMappa();
         }
         
-        // Posiziona player sulla nuova cella
+        // Se arrivi qui, il movimento è autorizzato (casella vuota, oggetto raccolto o nemico ucciso)
+        mappa[playerY][playerX] = '.';
+        playerY = newY;
+        playerX = newX;
         mappa[playerY][playerX] = 'P';
     }
 
-    static void combattiNemicoMappa() {
+    // Modificato per restituire un boolean (true se vinci, false se fuggi/muori)
+    static boolean combattiNemicoMappa() {
         Personaggio nemico = generaNemico();
-        nemico.nome = "Nemico Mappa"; // Override nome per chiarezza
+        nemico.nome = "Nemico Mappa";
         
         System.out.println("Affronti un " + nemico.nome + " (Liv." + nemico.livello + ")!");
         
-        // Combattimento semplificato per la mappa
         while (player.vite > 0 && nemico.vite > 0) {
             System.out.println("\nTu: " + player.vite + " HP | Nemico: " + nemico.vite + " HP");
             System.out.println("1) Attacca  2) Scappa");
             int scelta = leggiIntero();
             
             if (scelta == 1) {
-                // Attacco player
-                int danno = player.forza + (rand.nextInt(100) < player.fortuna ? player.forza : 0); // Critico
+                int danno = player.forza + (rand.nextInt(100) < player.fortuna ? player.forza : 0);
                 nemico.vite -= danno;
                 System.out.println("Infliggi " + danno + " danni!");
                 
@@ -260,11 +264,9 @@ public class miniGame {
                     System.out.println("🏆 Hai sconfitto il nemico! +2 Livello, +3 Forza");
                     player.livello += 2;
                     player.forza += 3;
-                    mappa[playerY][playerX] = '.'; // Rimuovi nemico dalla mappa
-                    return;
+                    return true;
                 }
                 
-                // Contrattacco nemico
                 player.vite -= nemico.forza;
                 System.out.println("Il nemico ti infligge " + nemico.forza + " danni!");
                 
@@ -272,13 +274,14 @@ public class miniGame {
                     System.out.println("💀 SEI MORTO! Game Over.");
                     giocoIniziato = false;
                     inEsplorazioneMappa = false;
-                    return;
+                    return false;
                 }
             } else {
                 System.out.println("Sei fuggito!");
-                return;
+                return false;
             }
         }
+        return false;
     }
 
     static void raccogliOggettoMappa() {
@@ -287,7 +290,6 @@ public class miniGame {
         
         player.aggiungiOggetto(oggettoTrovato);
         
-        // Effetti bonus
         if (oggettoTrovato.equals("Pozione") || oggettoTrovato.equals("Erba Curativa")) {
             player.vite += 3;
             System.out.println(">> Hai recuperato 3 vite!");
@@ -295,22 +297,18 @@ public class miniGame {
             player.livello++;
             System.out.println(">> Hai guadagnato esperienza! Livello +1");
         }
-        
-        mappa[playerY][playerX] = '.'; // Rimuovi oggetto dalla mappa
     }
     // ===================================
 
     static void gestisciAvventura() {
         if (!giocoIniziato) {
             scegliClasse();
-            inizializzaMappa(); // Inizializza mappa all'inizio del gioco
+            inizializzaMappa();
             posizionaElementi(NUM_NEMICI, 'N');
             posizionaElementi(NUM_OGGETTI, 'O');
             giocoIniziato = true;
-            System.out.println("\n🗺️ Il mondo è stato generato! Usa 'Esplora Mappa' per muoverti.");
         }
         
-        // Se il player è Mago, avvia la storia originale
         if (player.classeNome.equals("Mago")) {
             storiaMago();
         } else {
@@ -359,7 +357,7 @@ public class miniGame {
         player.mostraStatistiche();
     }
 
-    // ========== STORIA ORIGINALE (invariata) ==========
+    // ========== STORIA ORIGINALE ==========
     static void storiaMago() {
         System.out.println("\n--- CAPITOLO 1: L'ACCADEMIA ---");
         System.out.println("Ti svegli come figlio del Re.");
@@ -559,7 +557,6 @@ public class miniGame {
                     System.out.println("👊 Attacco a mani nude!");
                 }
 
-                // Critico
                 if (rand.nextInt(100) < player.fortuna) {
                     System.out.println("💥 COLPO CRITICO!");
                     danno *= 2;
@@ -573,7 +570,6 @@ public class miniGame {
                     break;
                 }
 
-                // Contrattacco
                 player.vite -= nemico.forza;
                 System.out.println("Il nemico ti infligge " + nemico.forza + " danni!");
                 if (player.vite <= 0) {
@@ -586,8 +582,6 @@ public class miniGame {
             System.out.println("Sei scappato come un codardo!");
         }
         if (player.vite > 0) gilda();
-        System.out.println("\nRitorno al menu...");
-        giocoIniziato = false;
     }
 
     static void gilda() {
@@ -598,6 +592,8 @@ public class miniGame {
             inEsplorazioneMappa = true;
         } else {
             System.out.println("Rifiuti. Riposi un po'.");
+            System.out.println("\nRitorno al menu...");
+            giocoIniziato = false;
         }
     }
 }
